@@ -4,19 +4,26 @@
 
 import javax.swing.*;
 
+import puzzle_bitches_logic.BubbleField;
+import puzzle_bitches_ui.GameFrame;
+
 public class Main {
 
     public static void main(String[] args){
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
 
+            /**
+             * TODO: Make a menu panel that creates the gameframe, Main doesn't need to know hiw te game gets started
+             */
+
+
             @Override
             public void run() {
-                JFrame frame = new JFrame("Puzzle Bobble");
-                frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                frame.setContentPane(new GameFrame(800, 800));
-                frame.pack();
-                frame.setVisible(true);
+                BubbleField bubbleField = new BubbleField();
+                GameFrame gameFrame = new GameFrame(bubbleField);
+                bubbleField.gameStart();
+                bubbleField.addBubble();
             }
         });
     }
