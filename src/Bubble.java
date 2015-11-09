@@ -11,7 +11,6 @@ public class Bubble {
     private float posBubbleX;
     private float posBubbleY;
     private static float bubbleRadius = 25;
-    String test = "test";
 
     private float bubbleSpeedX;
     private float bubbleSpeedY;

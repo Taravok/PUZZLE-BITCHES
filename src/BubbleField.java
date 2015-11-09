@@ -18,7 +18,6 @@ public class BubbleField {
     private int maxFieldY;
     private float angleInDegrees;
     private float angleCenter = 270;
-    String test = "test";
     public static float getAngleMin() {
         return angleMin;
     }

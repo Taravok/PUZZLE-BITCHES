@@ -13,7 +13,6 @@ public class GameFrame extends JPanel {
 
     private static int framesPerSecond = 120;
 
-    private Bubble bubble;
     private ArrayList<Bubble> bubbeList = new ArrayList<Bubble>();
     private BubbleField bubbleField;
     private DrawCanvas canvas;
@@ -24,7 +23,6 @@ public class GameFrame extends JPanel {
     int startPosY;
     int speed = 5;
     int angleInDegrees;
-    String test = "test";
 
     private ControlPanel control;
 
@@ -38,8 +36,6 @@ public class GameFrame extends JPanel {
 
         System.out.println("Chosen angle(random): " + angleInDegrees);
 
-        bubble = new Bubble(startPosX, startPosY, speed, new Random().nextInt(336-204) + 205);
-        bubbeList.add(bubble);
 
         bubbleField = new BubbleField(0, 0, canvasWidth, canvasHeight);
 
@@ -69,7 +65,9 @@ public class GameFrame extends JPanel {
     }
 
     public void gameUpdate(){
-        bubbleField.checkOnCollision(bubbleField, bubble);
+        for(Bubble bubble : bubbeList){
+            bubbleField.checkOnCollision(bubbleField, bubble);
+        }
     }
 
     class DrawCanvas extends JPanel {
@@ -87,8 +85,9 @@ public class GameFrame extends JPanel {
 
             g.setColor(Color.WHITE);
             g.setFont(new Font("Courier New", Font.PLAIN, 16));
-            g.drawString("Bubble " + bubble.toString(), 10, 20);
-
+            if(0 <= bubbeList.size() - 1){
+                g.drawString("Bubble " + bubbeList.get(bubbeList.size() - 1).toString(), 10, 20);
+            }
         }
 
         @Override
