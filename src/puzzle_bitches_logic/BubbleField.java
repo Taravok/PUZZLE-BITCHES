@@ -20,13 +20,11 @@ public class BubbleField implements Subject {
     private ArrayList<Observer> observers;
     private ArrayList<Bubble> bubbles;
     private boolean game;
-    private int launcherAngle;
     Thread gameThread;
 
     public BubbleField(){
         this.bubbles = new ArrayList<>();
         this.observers = new ArrayList<>();
-        this.launcherAngle = 270;
     }
 
     public ArrayList<Bubble> getBubbles(){
@@ -51,7 +49,7 @@ public class BubbleField implements Subject {
                 bubble.moveBubble();
                 updateObservers();
                 try {
-                    Thread.sleep(250 / 120);
+                    Thread.sleep(1000 / 120);
                 } catch (InterruptedException ex){
                     ex.printStackTrace();
                 }
@@ -76,28 +74,13 @@ public class BubbleField implements Subject {
     }
 
     public synchronized void addBubble(){
-        Bubble newBubble = new Bubble(launcherAngle);
+        Bubble newBubble = new Bubble(new Random().nextInt(336-204) + 205);
         bubbles.add(newBubble);
-    }
-
-    public void moveLauncherLeft(){
-        System.out.println(launcherAngle);
-        if(200 < launcherAngle) {
-            launcherAngle -= 5;
-        }
-    }
-
-    public void moveLauncherRight(){
-        System.out.println(launcherAngle);
-        if(launcherAngle < 340){
-            launcherAngle += 5;
-        }
     }
 
     @Override
     public void registerObserver(Observer o) {
         observers.add(o);
-        o.update();
     }
 
     @Override
