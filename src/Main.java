@@ -23,7 +23,6 @@ public class Main {
                 BubbleField bubbleField = new BubbleField();
                 GameFrame gameFrame = new GameFrame(bubbleField);
                 bubbleField.gameStart();
-                bubbleField.addBubble();
             }
         });
     }

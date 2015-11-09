@@ -7,6 +7,7 @@ package puzzle_bitches_logic;
 import puzzle_bitches_interfaces.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class BubbleField implements Subject {
 
@@ -19,6 +20,7 @@ public class BubbleField implements Subject {
     private ArrayList<Observer> observers;
     private ArrayList<Bubble> bubbles;
     private boolean game;
+    Thread gameThread;
 
     public BubbleField(){
         this.bubbles = new ArrayList<>();
@@ -31,25 +33,26 @@ public class BubbleField implements Subject {
 
     public void gameStart(){
         game = true;
-        Thread gameThread = new Thread(){
+        gameThread = new Thread(){
             public void run(){
                 while(game){
                     updateBubbles();
-
                 }
             }
         };
         gameThread.start();
     }
 
-    private void updateBubbles(){
+    private synchronized void updateBubbles(){
         for(Bubble bubble : bubbles){
             while(!checkCollisions(bubble)){
                 bubble.moveBubble();
                 updateObservers();
                 try {
                     Thread.sleep(1000 / 120);
-                } catch (InterruptedException ex){}
+                } catch (InterruptedException ex){
+                    ex.printStackTrace();
+                }
             }
         }
     }
@@ -58,10 +61,9 @@ public class BubbleField implements Subject {
         float collisionBorderMinX = BubbleField.MINFIELDX + Bubble.BUBBLERADIUS;
         float collisionBorderMaxX = BubbleField.MAXFIELDX - Bubble.BUBBLERADIUS;
         float collisionBorderMinY = BubbleField.MINFIELDY + Bubble.BUBBLERADIUS;
-        //float collisionBorderMaxY = BubbleField.MAXFIELDY - Bubble.BUBBLERADIUS;
         float posBubbleX = bubble.getBubblePosition()[0];
         float posBubbleY = bubble.getBubblePosition()[1];
-        if(posBubbleX < collisionBorderMinX || posBubbleX < collisionBorderMaxX){
+        if(posBubbleX < collisionBorderMinX || collisionBorderMaxX < posBubbleX){
             bubble.flipAngle();
         }
         if(posBubbleY < collisionBorderMinY){
@@ -71,10 +73,9 @@ public class BubbleField implements Subject {
         return false;
     }
 
-    public void addBubble(){
-        Bubble newBubble = new Bubble(270);
+    public synchronized void addBubble(){
+        Bubble newBubble = new Bubble(new Random().nextInt(336-204) + 205);
         bubbles.add(newBubble);
-        newBubble.updateBubble();
     }
 
     @Override
