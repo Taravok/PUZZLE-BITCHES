@@ -15,11 +15,9 @@ public class Bubble {
     private float posBubbleY;
     private float bubbleSpeedX;
     private float bubbleSpeedY;
-    private float bubbleTrajectoryAngle;
     private Color bubbleColor;
 
     public Bubble(float bubbleTrajectoryAngle){
-        this.bubbleTrajectoryAngle = bubbleTrajectoryAngle;
         this.posBubbleX = BubbleField.MAXFIELDX / 2;
         this.posBubbleY = BubbleField.MAXFIELDY - 60;
         this.bubbleSpeedX = (float)(BASEBUBBLESPEED * Math.cos(Math.toRadians(bubbleTrajectoryAngle)));
@@ -48,7 +46,6 @@ public class Bubble {
     public void moveBubble(){
         posBubbleX += bubbleSpeedX;
         posBubbleY += bubbleSpeedY;
-        System.out.println("Current X : " + posBubbleX + " Current Y: " + posBubbleY + " bubbleTrajectoryAngle: " + bubbleTrajectoryAngle);
     }
 
     public void flipAngle(){

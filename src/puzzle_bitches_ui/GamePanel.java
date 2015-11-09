@@ -2,10 +2,7 @@ package puzzle_bitches_ui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 import puzzle_bitches_interfaces.Observer;
@@ -27,36 +24,25 @@ class GamePanel extends JPanel implements Observer {
         canvasHeight = height - controllerHeight;
         this.bubbleField = bubbleField;
         this.setBackground(Color.BLACK);
-        bindClickEvent();
+        setFocusable(true);
+        bindKeyEvent();
         bubbleField.registerObserver(this);
-        update();
     }
 
-    private void bindClickEvent(){
-        this.addMouseListener(new MouseListener() {
+    private void bindKeyEvent(){
+        this.addKeyListener(new KeyAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                bubbleField.addBubble();
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if(e.getKeyChar() == 'a'){
+                    bubbleField.moveLauncherLeft();
+                }
+                else if(e.getKeyChar() == 'd'){
+                    bubbleField.moveLauncherRight();
+                }
+                else if(e.getKeyChar() == 'w'){
+                    bubbleField.addBubble();
+                }
             }
         });
     }
