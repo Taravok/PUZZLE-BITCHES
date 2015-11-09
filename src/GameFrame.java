@@ -24,6 +24,7 @@ public class GameFrame extends JPanel {
     int startPosY;
     int speed = 5;
     int angleInDegrees;
+    String test = "test";
 
     private ControlPanel control;
 
