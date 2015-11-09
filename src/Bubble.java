@@ -10,10 +10,11 @@ public class Bubble {
 
     private float posBubbleX;
     private float posBubbleY;
-    private static float bubbleRadius = 30;
+    private static float bubbleRadius = 25;
 
     private float bubbleSpeedX;
     private float bubbleSpeedY;
+
     private Color bubbleColor;
     private Color[] colorList = {Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW};
 
@@ -53,16 +54,20 @@ public class Bubble {
         this.bubbleSpeedY = bubbleSpeedY;
     }
 
-    public Bubble(float speed, float angleInDegrees){
+    public Color getBubbleColor() {
+        return bubbleColor;
+    }
 
-        posBubbleX = (800 - bubbleRadius) / 2;
-        posBubbleY = 800 - 30;
+    public Bubble(float posBubbleX, float posBubbleY, float speed, float angleInDegrees){
+
+        this.posBubbleX = posBubbleX;
+        this.posBubbleY = posBubbleY;
         bubbleSpeedX = (float)(speed * Math.cos(Math.toRadians(angleInDegrees)));
         bubbleSpeedY = (float)(-speed * Math.sin(Math.toRadians(angleInDegrees)));
         bubbleColor = colorList[new Random().nextInt(colorList.length)];
     }
 
-    public void draw(Graphics g){
+    public void drawBubble(Graphics g){
         g.setColor(bubbleColor);
         g.fillOval((int)(posBubbleX - bubbleRadius), (int)(posBubbleY - bubbleRadius), (int)(2 * bubbleRadius), (int)(2 * bubbleRadius));
     }
@@ -76,8 +81,8 @@ public class Bubble {
 
     public String toString() {
         sb.delete(0, sb.length());
-        formatter.format("@(%3.0f,%3.0f) V=(%2.0f,%2.0f) " + "Angle=%4.0f", //angle in counterclockwise degrees !
-                posBubbleX, posBubbleY, bubbleSpeedX, bubbleSpeedY, getMoveAngle());
+        formatter.format("@(%3.0f,%3.0f) V=(%2.0f,%2.0f) Angle=%4.0f color=%s", //angle in counterclockwise degrees !
+                posBubbleX, posBubbleY, bubbleSpeedX, bubbleSpeedY, getMoveAngle(), getBubbleColor());
         return sb.toString();
     }
 

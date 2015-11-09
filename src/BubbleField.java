@@ -83,7 +83,8 @@ public class BubbleField {
         if(bubble.getPosBubbleY() < collisionBorderMinY){
             bubble.setBubbleSpeedX(0);
             bubble.setBubbleSpeedY(0);
-        } else if (bubble.getPosBubbleY() > collisionBorderMaxY) {
+        }
+        else if (bubble.getPosBubbleY() > collisionBorderMaxY) {
             bubble.setBubbleSpeedY(-bubble.getBubbleSpeedY());
             bubble.setPosBubbleY(collisionBorderMaxY);
         }
@@ -91,6 +92,6 @@ public class BubbleField {
 
     public void draw(Graphics g){
         g.setColor(background);
-        g.fillRect(minFieldX, minFieldY, maxFieldX - minFieldX - 1, maxFieldY - minFieldY - 1);
+        g.fillRect(minFieldX, minFieldY, maxFieldX - minFieldX, maxFieldY - minFieldY);
     }
 }
