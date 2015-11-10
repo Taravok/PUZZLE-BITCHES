@@ -16,9 +16,10 @@ public class BubbleField implements Subject {
     public final static int MINFIELDY = 0;
     public final static int MAXFIELDY = 800;
 
-
+    private final int angleStep = 4;
     private ArrayList<Observer> observers;
     private ArrayList<Bubble> bubbles;
+    private Bubble activeBubble;
     private boolean game;
     private int launcherAngle;
     Thread gameThread;
@@ -31,6 +32,10 @@ public class BubbleField implements Subject {
 
     public ArrayList<Bubble> getBubbles(){
         return bubbles;
+    }
+
+    public int getLauncherAngle(){
+        return launcherAngle;
     }
 
     public void gameStart(){
@@ -46,9 +51,8 @@ public class BubbleField implements Subject {
     }
 
     private synchronized void updateBubbles(){
-        for(Bubble bubble : bubbles){
-            while(!checkCollisions(bubble)){
-                bubble.moveBubble();
+            while(activeBubble != null && !checkCollisions(activeBubble)){
+                activeBubble.moveBubble();
                 updateObservers();
                 try {
                     Thread.sleep(250 / 120);
@@ -56,7 +60,7 @@ public class BubbleField implements Subject {
                     ex.printStackTrace();
                 }
             }
-        }
+
     }
 
     private boolean checkCollisions(Bubble bubble){
@@ -70,27 +74,39 @@ public class BubbleField implements Subject {
         }
         if(posBubbleY < collisionBorderMinY){
             bubble.setBubbleSpeed(new float[]{0, 0});
+            correctBubble(bubble);
             return true;
         }
         return false;
     }
 
+    private synchronized void correctBubble(Bubble bubble){
+        if(!bubble.isCollided()){
+            bubble.setCollided(true);
+            updateObservers();
+        }
+    }
+
     public synchronized void addBubble(){
         Bubble newBubble = new Bubble(launcherAngle);
         bubbles.add(newBubble);
+        activeBubble = newBubble;
     }
 
     public void moveLauncherLeft(){
-        System.out.println(launcherAngle);
+
         if(200 < launcherAngle) {
-            launcherAngle -= 5;
+            launcherAngle -= angleStep;
+            System.out.println(launcherAngle % 180);
+            updateObservers();
         }
     }
 
     public void moveLauncherRight(){
-        System.out.println(launcherAngle);
         if(launcherAngle < 340){
-            launcherAngle += 5;
+            launcherAngle += angleStep;
+            System.out.println(launcherAngle % 180);
+            updateObservers();
         }
     }
 

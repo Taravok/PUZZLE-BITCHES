@@ -1,10 +1,14 @@
 package puzzle_bitches_ui;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javafx.scene.transform.Affine;
 import puzzle_bitches_interfaces.Observer;
 import puzzle_bitches_logic.*;
 
@@ -16,6 +20,7 @@ class GamePanel extends JPanel implements Observer {
 
     private int canvasWidth;
     private int canvasHeight;
+    private BufferedImage image;
     private BubbleField bubbleField;
 
     public GamePanel(int width, int height, BubbleField bubbleField){
@@ -23,10 +28,25 @@ class GamePanel extends JPanel implements Observer {
         canvasWidth = width;
         canvasHeight = height - controllerHeight;
         this.bubbleField = bubbleField;
+        loadImage();
         this.setBackground(Color.BLACK);
         setFocusable(true);
         bindKeyEvent();
         bubbleField.registerObserver(this);
+    }
+
+    private void loadImage(){
+        //try{
+        try{
+            image = ImageIO.read(getClass().getResource("arrow.png"));
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+            //image = ImageIO.read(new File("file:puzzle_bitches_resources/arrow.png"));
+        //} catch(IOException e){
+        //    e.printStackTrace();
+        //}
     }
 
     private void bindKeyEvent(){
@@ -34,13 +54,11 @@ class GamePanel extends JPanel implements Observer {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                if(e.getKeyChar() == 'a'){
+                if (e.getKeyChar() == 'a') {
                     bubbleField.moveLauncherLeft();
-                }
-                else if(e.getKeyChar() == 'd'){
+                } else if (e.getKeyChar() == 'd') {
                     bubbleField.moveLauncherRight();
-                }
-                else if(e.getKeyChar() == 'w'){
+                } else if (e.getKeyChar() == 'w') {
                     bubbleField.addBubble();
                 }
             }
@@ -60,6 +78,21 @@ class GamePanel extends JPanel implements Observer {
             g.setColor(bubble.getBubbleColor());
             g.fillOval((int)(bubblePosition[0] - Bubble.BUBBLERADIUS), (int)(bubblePosition[1] - Bubble.BUBBLERADIUS), (int)(2 * Bubble.BUBBLERADIUS), (int)(2 * Bubble.BUBBLERADIUS));
         }
+        Graphics2D g2d = (Graphics2D)g.create();
+        g2d.setColor(Color.RED);
+        for(int i = 0; i < getWidth(); i += 50){
+            g2d.drawLine(i, 0, i, getHeight());
+        }
+        for(int i = 0; i < getHeight(); i += 50){
+            g2d.drawLine(0, i, getWidth(), i);
+        }
+        int x = (getWidth() - image.getWidth()) / 2;
+        int y = getHeight() - 45;
+        AffineTransform at = new AffineTransform();
+        at.setToRotation(Math.toRadians(bubbleField.getLauncherAngle()), x + (image.getWidth() / 2), y + (image.getHeight() / 2));
+        at.translate(x, y);
+        g2d.setTransform(at);
+        g2d.drawImage(image, 0, 0, this);
     }
 
     @Override
