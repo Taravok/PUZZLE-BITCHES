@@ -1,14 +1,6 @@
 package puzzle_bitches_ui;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-
-import puzzle_bitches_interfaces.Observer;
 import puzzle_bitches_logic.*;
 
 /**

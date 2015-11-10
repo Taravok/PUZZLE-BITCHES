@@ -3,11 +3,8 @@
  */
 
 package puzzle_bitches_logic;
-
 import puzzle_bitches_interfaces.*;
-
 import java.util.ArrayList;
-import java.util.Random;
 
 public class BubbleField implements Subject {
 
@@ -20,7 +17,9 @@ public class BubbleField implements Subject {
     private ArrayList<Observer> observers;
     private ArrayList<Bubble> bubbles;
     private Bubble activeBubble;
+    private Bubble nextBubble;
     private boolean game;
+    private boolean collision;
     private int launcherAngle;
     Thread gameThread;
 
@@ -51,7 +50,8 @@ public class BubbleField implements Subject {
     }
 
     private synchronized void updateBubbles(){
-            while(activeBubble != null && !checkCollisions(activeBubble)){
+            while(activeBubble != null && !collision){
+                collision = checkCollisions(activeBubble) || checkCollisionOtherBubbles();
                 activeBubble.moveBubble();
                 updateObservers();
                 try {
@@ -63,7 +63,7 @@ public class BubbleField implements Subject {
 
     }
 
-    private boolean checkCollisions(Bubble bubble){
+    private synchronized boolean checkCollisions(Bubble bubble){
         float collisionBorderMinX = BubbleField.MINFIELDX + Bubble.BUBBLERADIUS;
         float collisionBorderMaxX = BubbleField.MAXFIELDX - Bubble.BUBBLERADIUS;
         float collisionBorderMinY = BubbleField.MINFIELDY + Bubble.BUBBLERADIUS;
@@ -74,30 +74,43 @@ public class BubbleField implements Subject {
         }
         if(posBubbleY < collisionBorderMinY){
             bubble.setBubbleSpeed(new float[]{0, 0});
-            correctBubble(bubble);
+            System.out.println("Collision with ceiling");
             return true;
         }
         return false;
     }
 
-    private synchronized void correctBubble(Bubble bubble){
-        if(!bubble.isCollided()){
-            bubble.setCollided(true);
-            updateObservers();
+    private boolean checkCollisionOtherBubbles(){
+        if(bubbles.size() != 1) {
+            float currentBubbleX = bubbles.get(bubbles.size() - 1).getBubblePosition()[0];
+            float currentBubbleY = bubbles.get(bubbles.size() - 1).getBubblePosition()[1];
+            for (int i = 0; i < bubbles.size() - 1; i++) {
+                float prevousBubbleX = bubbles.get(i).getBubblePosition()[0];
+                float prevousBubbleY = bubbles.get(i).getBubblePosition()[1];
+                double distanceBetweenBubbles = Math.sqrt(
+                        ((currentBubbleX - prevousBubbleX) * (currentBubbleX - prevousBubbleX))
+                                + ((currentBubbleY - prevousBubbleY) * (currentBubbleY - prevousBubbleY))
+                );
+                if (distanceBetweenBubbles < ((Bubble.BUBBLERADIUS * 2) + 5)) {
+                    System.out.println("Collision with bubble");
+                    return true;
+                }
+            }
         }
+        return false;
     }
 
     public synchronized void addBubble(){
+        collision = false;
         Bubble newBubble = new Bubble(launcherAngle);
-        bubbles.add(newBubble);
         activeBubble = newBubble;
+        bubbles.add(newBubble);
     }
 
     public void moveLauncherLeft(){
 
         if(200 < launcherAngle) {
             launcherAngle -= angleStep;
-            System.out.println(launcherAngle % 180);
             updateObservers();
         }
     }
@@ -105,7 +118,6 @@ public class BubbleField implements Subject {
     public void moveLauncherRight(){
         if(launcherAngle < 340){
             launcherAngle += angleStep;
-            System.out.println(launcherAngle % 180);
             updateObservers();
         }
     }

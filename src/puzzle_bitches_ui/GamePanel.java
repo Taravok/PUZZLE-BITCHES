@@ -8,7 +8,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import javafx.scene.transform.Affine;
+import com.sun.corba.se.impl.orbutil.graph.Graph;
 import puzzle_bitches_interfaces.Observer;
 import puzzle_bitches_logic.*;
 
@@ -72,20 +72,21 @@ class GamePanel extends JPanel implements Observer {
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
+        paintBubbles(g);
+        paintLauncher(g);
+    }
+
+    private void paintBubbles(Graphics g){
         ArrayList<Bubble> bubbles = bubbleField.getBubbles();
         for(Bubble bubble : bubbles){
             float[] bubblePosition = bubble.getBubblePosition();
             g.setColor(bubble.getBubbleColor());
             g.fillOval((int)(bubblePosition[0] - Bubble.BUBBLERADIUS), (int)(bubblePosition[1] - Bubble.BUBBLERADIUS), (int)(2 * Bubble.BUBBLERADIUS), (int)(2 * Bubble.BUBBLERADIUS));
         }
+    }
+
+    private void paintLauncher(Graphics g){
         Graphics2D g2d = (Graphics2D)g.create();
-        g2d.setColor(Color.RED);
-        for(int i = 0; i < getWidth(); i += 50){
-            g2d.drawLine(i, 0, i, getHeight());
-        }
-        for(int i = 0; i < getHeight(); i += 50){
-            g2d.drawLine(0, i, getWidth(), i);
-        }
         int x = (getWidth() - image.getWidth()) / 2;
         int y = getHeight() - 45;
         AffineTransform at = new AffineTransform();

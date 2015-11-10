@@ -7,6 +7,8 @@ import javax.swing.*;
 import puzzle_bitches_logic.BubbleField;
 import puzzle_bitches_ui.GameFrame;
 
+import java.util.ArrayList;
+
 public class Main {
 
     public static void main(String[] args){

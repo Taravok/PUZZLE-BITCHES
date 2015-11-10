@@ -16,11 +16,9 @@ public class Bubble {
     private float bubbleSpeedX;
     private float bubbleSpeedY;
     private float bubbleTrajectoryAngle;
-    private boolean collided;
     private Color bubbleColor;
 
     public Bubble(float bubbleTrajectoryAngle){
-        this.collided = false;
         this.bubbleTrajectoryAngle = bubbleTrajectoryAngle;
         this.posBubbleX = BubbleField.MAXFIELDX / 2;
         this.posBubbleY = BubbleField.MAXFIELDY - 50;
@@ -38,23 +36,9 @@ public class Bubble {
         return new float[] { posBubbleX, posBubbleY };
     }
 
-    public boolean isCollided(){
-        return collided;
-    }
-
-    public void setBubblePosition(float[] newPosition){
-        posBubbleX = newPosition[0];
-        posBubbleY = newPosition[1];
-        System.out.println("Current X : " + posBubbleX + " Current Y: " + posBubbleY + " bubbleTrajectoryAngle: " + bubbleTrajectoryAngle);
-    }
-
     public void setBubbleSpeed(float[] speeds){
         bubbleSpeedX = speeds[0];
         bubbleSpeedY = speeds[1];
-    }
-
-    public void setCollided(boolean collided){
-        this.collided = collided;
     }
 
     public void moveBubble(){
