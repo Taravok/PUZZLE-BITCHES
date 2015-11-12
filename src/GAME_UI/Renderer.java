@@ -1,22 +1,19 @@
-package puzzle_bitches_ui;
+package GAME_UI;
 
-import puzzle_bitches_logic.BubbleField;
-import puzzle_bitches_logic.Launcher;
-import puzzle_bitches_logic.Bubble;
+import LOGICS.BubbleField;
+import LOGICS.Shooter;
+import LOGICS.Bubble;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-/**
- * Created by Brenainn on 12/11/2015.
- */
 class Renderer {
 
     private BubbleField bubbleField;
     private Canvas renderingFor;
-    private BufferedImage launcherImage;
+    private BufferedImage shooterImage;
     private BufferedImage spriteSheet;
 
     public Renderer(BubbleField bubbleField, Canvas renderingFor){
@@ -26,13 +23,13 @@ class Renderer {
     }
 
     public int getImageWidth(){
-        return launcherImage.getWidth(renderingFor);
+        return shooterImage.getWidth(renderingFor);
     }
 
     private void loadImages(){
         try{
-            launcherImage = ImageIO.read(getClass().getResource("/puzzle_bitches_resources/arrow.png"));
-            spriteSheet = ImageIO.read(getClass().getResource("/puzzle_bitches_resources/sprite-bubbles.png"));
+            shooterImage = ImageIO.read(getClass().getResource("/RES/arrow.png"));
+            spriteSheet = ImageIO.read(getClass().getResource("/RES/bubbles.png"));
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -61,17 +58,17 @@ class Renderer {
         for(Bubble regularBubble : regularBubbles){
             int bubblePosX = regularBubble.getBubbleRenderPosX();
             int bubblePosY = regularBubble.getBubbleRenderPosY();
-            BufferedImage bubbleSprite = spriteSheet.getSubimage(regularBubble.getBubbleColorValueX() * 32, regularBubble.getBubbleColorValueY() * 32, 32, 32);
+            BufferedImage bubbleSprite = spriteSheet.getSubimage(regularBubble.getBubbleColorValueX() * 75, regularBubble.getBubbleColorValueY() * 75, 75, 75);
             g2d.drawImage(bubbleSprite, bubblePosX, bubblePosY, renderingFor);
         }
     }
 
-    public void paintLauncher(Graphics2D g2d, Launcher launcher){
-        int x = (int)launcher.getPosX();
-        int y = (int)launcher.getPosY();
-        AffineTransform at = launcher.getAffineTransform(x, y, launcherImage.getWidth(renderingFor), launcherImage.getHeight(renderingFor));
+    public void paintShooter(Graphics2D g2d, Shooter shooter){
+        int x = (int) shooter.getPosX();
+        int y = (int) shooter.getPosY();
+        AffineTransform at = shooter.getAffineTransform(x, y, shooterImage.getWidth(renderingFor), shooterImage.getHeight(renderingFor));
         g2d.setTransform(at);
-        g2d.drawImage(launcherImage, 0, 0, renderingFor);
+        g2d.drawImage(shooterImage, 0, 0, renderingFor);
     }
 
 }

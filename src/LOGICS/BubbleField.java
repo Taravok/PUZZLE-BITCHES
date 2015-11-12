@@ -1,16 +1,13 @@
-/**
- * Created by Brenainn on 09/11/2015.
- */
+package LOGICS;
 
-package puzzle_bitches_logic;
 import java.util.ArrayList;
 
 public class BubbleField {
 
     public final static int MINFIELDX = 0;
-    public final static int MAXFIELDX = 500;
+    public final static int MAXFIELDX = 600;
     public final static int MINFIELDY = 0;
-    public final static int MAXFIELDY = 600;
+    public final static int MAXFIELDY = 900;
 
     private final int angleStep = 2;
     private ArrayList<Bubble> regularBubbles;
@@ -19,12 +16,14 @@ public class BubbleField {
     private boolean game;
     private boolean collision;
     private int launcherAngle;
+
     Thread gameThread;
 
     public BubbleField(){
         this.regularBubbles = new ArrayList<>();
         this.launcherAngle = 270;
-        this.nextRegularBubble = new Bubble();
+        this.nextRegularBubble = new Bubble() {
+        };
     }
 
     public ArrayList<Bubble> getRegularBubbles(){
@@ -52,7 +51,7 @@ public class BubbleField {
                 collision = checkCollisions(activeRegularBubble) || checkCollisionOtherBubbles();
                 activeRegularBubble.moveBubble();
                 try {
-                    Thread.sleep(1);
+                    Thread.sleep(250 /120);
                 } catch (InterruptedException ex){
                     ex.printStackTrace();
                 }
@@ -60,15 +59,15 @@ public class BubbleField {
     }
 
     private synchronized boolean checkCollisions(Bubble regularBubble){
-        float collisionBorderMinX = BubbleField.MINFIELDX + Bubble.BUBBLERADIUS;
-        float collisionBorderMaxX = BubbleField.MAXFIELDX - Bubble.BUBBLERADIUS;
-        float collisionBorderMinY = BubbleField.MINFIELDY + Bubble.BUBBLERADIUS;
+        float collisionLeftWall = MINFIELDX + Bubble.BUBBLERADIUS;
+        float collisionRightWall = MAXFIELDX - Bubble.BUBBLERADIUS;
+        float collisionCeiling = MINFIELDY + Bubble.BUBBLERADIUS;
         float posBubbleX = regularBubble.getPosX();
         float posBubbleY = regularBubble.getPosY();
-        if(posBubbleX < collisionBorderMinX || collisionBorderMaxX < posBubbleX){
+        if(posBubbleX < collisionLeftWall || collisionRightWall < posBubbleX){
             regularBubble.flipAngle();
         }
-        if(posBubbleY < collisionBorderMinY){
+        if(posBubbleY < collisionCeiling){
             regularBubble.setBubbleSpeed(new float[]{0, 0});
             return true;
         }
@@ -86,7 +85,7 @@ public class BubbleField {
                         ((currentBubbleX - prevousBubbleX) * (currentBubbleX - prevousBubbleX))
                                 + ((currentBubbleY - prevousBubbleY) * (currentBubbleY - prevousBubbleY))
                 );
-                if (distanceBetweenBubbles < ((Bubble.BUBBLERADIUS * 2) + 5)) {
+                if (distanceBetweenBubbles < ((Bubble.BUBBLERADIUS * 2) + 4)) {
                     return true;
                 }
             }

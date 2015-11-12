@@ -1,14 +1,10 @@
-package puzzle_bitches_ui;
+package GAME_UI;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 
-import puzzle_bitches_logic.*;
-
-/**
- * Created by Brenainn on 09/11/2015.
- */
+import LOGICS.*;
 
 class GameCanvas extends Canvas {
 
@@ -16,35 +12,37 @@ class GameCanvas extends Canvas {
     private int canvasHeight;
     private BubbleField bubbleField;
     private Renderer renderer;
-    private Launcher launcher;
+    private Shooter shooter;
     private BufferStrategy bs;
     private Thread renderThread;
 
     public GameCanvas(int width, int height, BubbleField bubbleField){
-        int controllerHeight = 30;
+        //int controllerHeight = 30;
         canvasWidth = width;
-        canvasHeight = height - controllerHeight;
+        canvasHeight = height;
         this.bubbleField = bubbleField;
         this.renderer = new Renderer(bubbleField, this);
-        this.launcher = new Launcher(canvasWidth, canvasHeight, renderer.getImageWidth(), bubbleField);
+        this.shooter = new Shooter(canvasWidth, canvasHeight, renderer.getImageWidth(), bubbleField);
         setFocusable(true);
         bindKeyEvent();
     }
 
     private void bindKeyEvent(){
         this.addKeyListener(new KeyAdapter() {
+
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                if (e.getKeyChar() == 'a') {
+                int key = e.getKeyCode();
+                if (key == 37 || key == KeyEvent.VK_A) {
                     bubbleField.moveLauncherLeft();
-                } else if (e.getKeyChar() == 'd') {
+                } else if (key == 39 || key == KeyEvent.VK_D) {
                     bubbleField.moveLauncherRight();
-                } else if (e.getKeyChar() == 'w') {
+                } else if (key == 38 || key == KeyEvent.VK_W) {
                     bubbleField.addBubble();
                 } else if (e.getKeyChar() == 'r'){
                     bubbleField.clearField();
-                }
+                } else if(key == 27) System.exit(1);
             }
         });
     }
@@ -75,7 +73,7 @@ class GameCanvas extends Canvas {
         renderer.paintGrid(g2d);
         renderer.paintNextBubble(g2d);
         renderer.paintBubbles(g2d);
-        renderer.paintLauncher(g2d, launcher);
+        renderer.paintShooter(g2d, shooter);
         bs.show();
     }
 

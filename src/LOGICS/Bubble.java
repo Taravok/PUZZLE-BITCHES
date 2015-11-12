@@ -1,11 +1,7 @@
-package puzzle_bitches_logic;
+package LOGICS;
 
 import java.util.Random;
-import puzzle_bitches_interfaces.MovingObject;
-
-/**
- * Created by Brenainn on 09/11/2015.
- */
+import INTERFACES.MovingObject;
 
 public class Bubble extends MovingObject {
 
@@ -15,9 +11,9 @@ public class Bubble extends MovingObject {
     public Bubble(){
         super();
         setPosX(BubbleField.MAXFIELDX / 2);
-        setPosY(BubbleField.MAXFIELDY - 50);
+        setPosY(BubbleField.MAXFIELDY - RADIUS);
         bubbleColorValueX = new Random().nextInt(4);
-        bubbleColorValueY = new Random().nextInt(2);
+        bubbleColorValueY = new Random().nextInt(4);
     }
 
     public void setBubbleTrajectoryAngle(float bubbleTrajectoryAngle){

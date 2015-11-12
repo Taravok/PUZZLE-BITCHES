@@ -1,16 +1,10 @@
-package puzzle_bitches_interfaces;
+package INTERFACES;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-
-/**
- * Created by Brenainn on 12/11/2015.
- */
 public abstract class GameObject {
 
-    public final static float RADIUS = 18F;
-    public final static int SPEED = 18;
-    public final static int ANGLESTEP = 7;
+    public final static float RADIUS = 37F;
+    public final static int SPEED = 100;
+    public final static int ANGLESTEP = 30;
 
     protected float posX;
     protected float posY;

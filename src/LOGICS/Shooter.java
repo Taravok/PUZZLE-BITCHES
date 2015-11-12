@@ -1,16 +1,13 @@
-package puzzle_bitches_logic;
+package LOGICS;
 
-import puzzle_bitches_interfaces.GameObject;
+import INTERFACES.GameObject;
 import java.awt.geom.AffineTransform;
 
-/**
- * Created by Brenainn on 12/11/2015.
- */
-public class Launcher extends GameObject {
+public class Shooter extends GameObject {
 
     private BubbleField bubbleField;
 
-    public Launcher(int parentWidth, int parentHeight, int imageWidth, BubbleField bubbleField){
+    public Shooter(int parentWidth, int parentHeight, int imageWidth, BubbleField bubbleField){
         calculatePosition(parentWidth, parentHeight, imageWidth);
         this.bubbleField = bubbleField;
     }
