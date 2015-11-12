@@ -9,19 +9,20 @@ import puzzle_bitches_logic.*;
 
 public class GameFrame extends JFrame{
 
-    private GamePanel gamePanel;
+    private GameCanvas gameCanvas;
 
     public GameFrame(BubbleField bubbleField){
-        this.gamePanel = new GamePanel(BubbleField.MAXFIELDX, BubbleField.MAXFIELDY, bubbleField);
+        this.gameCanvas = new GameCanvas(BubbleField.MAXFIELDX, BubbleField.MAXFIELDY, bubbleField);
         initialiseFrame();
     }
 
     private void initialiseFrame(){
         this.setTitle("PUZZLE BITCHES!");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setContentPane(gamePanel);
+        this.add(gameCanvas);
         this.pack();
         this.setVisible(true);
+        gameCanvas.renderLoop();
     }
 
 }

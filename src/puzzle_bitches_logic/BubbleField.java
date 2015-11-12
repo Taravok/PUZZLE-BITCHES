@@ -6,31 +6,30 @@ package puzzle_bitches_logic;
 import puzzle_bitches_interfaces.*;
 import java.util.ArrayList;
 
-public class BubbleField implements Subject {
+public class BubbleField {
 
     public final static int MINFIELDX = 0;
     public final static int MAXFIELDX = 500;
     public final static int MINFIELDY = 0;
-    public final static int MAXFIELDY = 800;
+    public final static int MAXFIELDY = 600;
 
-    private final int angleStep = 4;
-    private ArrayList<Observer> observers;
-    private ArrayList<Bubble> bubbles;
-    private Bubble activeBubble;
-    private Bubble nextBubble;
+    private final int angleStep = 2;
+    private ArrayList<RegularBubble> regularBubbles;
+    private RegularBubble activeRegularBubble;
+    private RegularBubble nextRegularBubble;
     private boolean game;
     private boolean collision;
     private int launcherAngle;
     Thread gameThread;
 
     public BubbleField(){
-        this.bubbles = new ArrayList<>();
-        this.observers = new ArrayList<>();
+        this.regularBubbles = new ArrayList<>();
         this.launcherAngle = 270;
+        this.nextRegularBubble = new RegularBubble();
     }
 
-    public ArrayList<Bubble> getBubbles(){
-        return bubbles;
+    public ArrayList<RegularBubble> getRegularBubbles(){
+        return regularBubbles;
     }
 
     public int getLauncherAngle(){
@@ -50,49 +49,45 @@ public class BubbleField implements Subject {
     }
 
     private synchronized void updateBubbles(){
-            while(activeBubble != null && !collision){
-                collision = checkCollisions(activeBubble) || checkCollisionOtherBubbles();
-                activeBubble.moveBubble();
-                updateObservers();
+            while(activeRegularBubble != null && !collision){
+                collision = checkCollisions(activeRegularBubble) || checkCollisionOtherBubbles();
+                activeRegularBubble.moveBubble();
                 try {
                     Thread.sleep(250 / 120);
                 } catch (InterruptedException ex){
                     ex.printStackTrace();
                 }
             }
-
     }
 
-    private synchronized boolean checkCollisions(Bubble bubble){
-        float collisionBorderMinX = BubbleField.MINFIELDX + Bubble.BUBBLERADIUS;
-        float collisionBorderMaxX = BubbleField.MAXFIELDX - Bubble.BUBBLERADIUS;
-        float collisionBorderMinY = BubbleField.MINFIELDY + Bubble.BUBBLERADIUS;
-        float posBubbleX = bubble.getBubblePosition()[0];
-        float posBubbleY = bubble.getBubblePosition()[1];
+    private synchronized boolean checkCollisions(RegularBubble regularBubble){
+        float collisionBorderMinX = BubbleField.MINFIELDX + RegularBubble.BUBBLERADIUS;
+        float collisionBorderMaxX = BubbleField.MAXFIELDX - RegularBubble.BUBBLERADIUS;
+        float collisionBorderMinY = BubbleField.MINFIELDY + RegularBubble.BUBBLERADIUS;
+        float posBubbleX = regularBubble.getPosX();
+        float posBubbleY = regularBubble.getPosY();
         if(posBubbleX < collisionBorderMinX || collisionBorderMaxX < posBubbleX){
-            bubble.flipAngle();
+            regularBubble.flipAngle();
         }
         if(posBubbleY < collisionBorderMinY){
-            bubble.setBubbleSpeed(new float[]{0, 0});
-            System.out.println("Collision with ceiling");
+            regularBubble.setBubbleSpeed(new float[]{0, 0});
             return true;
         }
         return false;
     }
 
     private boolean checkCollisionOtherBubbles(){
-        if(bubbles.size() != 1) {
-            float currentBubbleX = bubbles.get(bubbles.size() - 1).getBubblePosition()[0];
-            float currentBubbleY = bubbles.get(bubbles.size() - 1).getBubblePosition()[1];
-            for (int i = 0; i < bubbles.size() - 1; i++) {
-                float prevousBubbleX = bubbles.get(i).getBubblePosition()[0];
-                float prevousBubbleY = bubbles.get(i).getBubblePosition()[1];
+        if(regularBubbles.size() != 1) {
+            float currentBubbleX = regularBubbles.get(regularBubbles.size() - 1).getPosX();
+            float currentBubbleY = regularBubbles.get(regularBubbles.size() - 1).getPosY();
+            for (int i = 0; i < regularBubbles.size() - 1; i++) {
+                float prevousBubbleX = regularBubbles.get(i).getPosX();
+                float prevousBubbleY = regularBubbles.get(i).getPosY();
                 double distanceBetweenBubbles = Math.sqrt(
                         ((currentBubbleX - prevousBubbleX) * (currentBubbleX - prevousBubbleX))
                                 + ((currentBubbleY - prevousBubbleY) * (currentBubbleY - prevousBubbleY))
                 );
-                if (distanceBetweenBubbles < ((Bubble.BUBBLERADIUS * 2) + 5)) {
-                    System.out.println("Collision with bubble");
+                if (distanceBetweenBubbles < ((RegularBubble.BUBBLERADIUS * 2) + 5)) {
                     return true;
                 }
             }
@@ -102,36 +97,32 @@ public class BubbleField implements Subject {
 
     public synchronized void addBubble(){
         collision = false;
-        Bubble newBubble = new Bubble(launcherAngle);
-        activeBubble = newBubble;
-        bubbles.add(newBubble);
+        nextRegularBubble.setBubbleTrajectoryAngle(launcherAngle);
+        activeRegularBubble = nextRegularBubble;
+        regularBubbles.add(nextRegularBubble);
+        nextRegularBubble = new RegularBubble();
     }
 
     public void moveLauncherLeft(){
 
         if(200 < launcherAngle) {
             launcherAngle -= angleStep;
-            updateObservers();
         }
     }
 
     public void moveLauncherRight(){
         if(launcherAngle < 340){
             launcherAngle += angleStep;
-            updateObservers();
         }
     }
 
-    @Override
-    public void registerObserver(Observer o) {
-        observers.add(o);
-        o.update();
+    public void clearField(){
+        regularBubbles = new ArrayList<>();
+        activeRegularBubble = null;
+        nextRegularBubble = new RegularBubble();
     }
 
-    @Override
-    public void updateObservers() {
-        for(Observer observer : observers){
-            observer.update();
-        }
+    public RegularBubble getNextRegularBubble() {
+        return nextRegularBubble;
     }
 }
