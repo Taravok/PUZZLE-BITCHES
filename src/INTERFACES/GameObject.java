@@ -1,4 +1,4 @@
-package INTERFACES;
+package interfaces;
 
 public abstract class GameObject {
 

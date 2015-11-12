@@ -1,7 +1,7 @@
-package LOGICS;
+package logics;
 
 import java.util.Random;
-import INTERFACES.MovingObject;
+import interfaces.MovingObject;
 
 public class Bubble extends MovingObject {
 

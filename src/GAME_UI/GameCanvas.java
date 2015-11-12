@@ -1,10 +1,10 @@
-package GAME_UI;
+package game_ui;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 
-import LOGICS.*;
+import logics.*;
 
 class GameCanvas extends Canvas {
 

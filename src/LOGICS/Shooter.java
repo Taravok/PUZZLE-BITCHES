@@ -1,6 +1,6 @@
-package LOGICS;
+package logics;
 
-import INTERFACES.GameObject;
+import interfaces.GameObject;
 import java.awt.geom.AffineTransform;
 
 public class Shooter extends GameObject {

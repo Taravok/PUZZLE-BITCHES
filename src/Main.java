@@ -1,6 +1,6 @@
 
-import LOGICS.BubbleField;
-import GAME_UI.*;
+import logics.BubbleField;
+import game_ui.*;
 
 public class Main {
 

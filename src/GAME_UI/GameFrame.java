@@ -1,7 +1,7 @@
-package GAME_UI;
+package game_ui;
 
 import javax.swing.*;
-import LOGICS.*;
+import logics.*;
 
 public class GameFrame extends JFrame{
 

@@ -1,8 +1,8 @@
-package GAME_UI;
+package game_ui;
 
-import LOGICS.BubbleField;
-import LOGICS.Shooter;
-import LOGICS.Bubble;
+import logics.BubbleField;
+import logics.Shooter;
+import logics.Bubble;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -28,19 +28,19 @@ class Renderer {
 
     private void loadImages(){
         try{
-            shooterImage = ImageIO.read(getClass().getResource("/RES/arrow.png"));
-            spriteSheet = ImageIO.read(getClass().getResource("/RES/bubbles.png"));
+            shooterImage = ImageIO.read(getClass().getResource("/res/arrow.png"));
+            spriteSheet = ImageIO.read(getClass().getResource("/res/bubbles.png"));
         } catch(Exception e){
             e.printStackTrace();
         }
     }
 
     public void paintGrid(Graphics2D g2d){
-        for(int i = 25; i < renderingFor.getWidth(); i+= 25){
+        for(int i = 75; i < renderingFor.getWidth(); i+= 75){
             g2d.setColor(Color.RED);
             g2d.drawLine(i, 0, i, renderingFor.getHeight());
         }
-        for(int i = 25; i < renderingFor.getHeight(); i+= 25){
+        for(int i = 75; i < renderingFor.getHeight(); i+= 75){
             g2d.drawLine(0, i, renderingFor.getWidth(), i);
         }
     }
