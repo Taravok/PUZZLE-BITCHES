@@ -70,9 +70,10 @@ class GameCanvas extends Canvas {
                 RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHints(rh);
-        renderer.paintGrid(g2d);
+        //renderer.paintGrid(g2d);
         renderer.paintNextBubble(g2d);
         renderer.paintBubbles(g2d);
+        renderer.paintHexGrid(g2d);
         renderer.paintShooter(g2d, shooter);
         bs.show();
     }

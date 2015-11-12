@@ -15,6 +15,8 @@ class Renderer {
     private Canvas renderingFor;
     private BufferedImage shooterImage;
     private BufferedImage spriteSheet;
+    private Font font = new Font("Arial", Font.BOLD, 14);
+    FontMetrics metrics;
 
     public Renderer(BubbleField bubbleField, Canvas renderingFor){
         this.bubbleField = bubbleField;
@@ -35,14 +37,52 @@ class Renderer {
         }
     }
 
-    public void paintGrid(Graphics2D g2d){
-        for(int i = 75; i < renderingFor.getWidth(); i+= 75){
-            g2d.setColor(Color.RED);
-            g2d.drawLine(i, 0, i, renderingFor.getHeight());
+    public void paintHexGrid(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        Point origin = new Point (300, 445);
+
+        g2d.setStroke(new BasicStroke(4.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
+        g2d.setFont(font);
+        metrics = g.getFontMetrics();
+
+        drawHexGridLoop(g2d, origin, 15, 39);
+    }
+
+    private void drawHexGridLoop(Graphics g, Point origin, int size, float radius) {
+        double ang30 = Math.toRadians(30);
+        double xOff = Math.cos(ang30) * radius;
+        double yOff = Math.sin(ang30) * radius;
+        int half = size / 2;
+
+        for (int row = 0; row < size; row++) {
+            int cols = size - java.lang.Math.abs(row - half);
+
+            for (int col = 0; col < cols; col++) {
+                int xLbl = (row < half) ? col - row : col - half;
+                int yLbl = row - half;
+                int x = (int) (origin.x + xOff * (col * 2 + 1 - cols));
+                int y = (int) (origin.y + yOff * (row - half) * 3);
+
+                drawHex(g, xLbl, yLbl, x, y, radius);
+            }
         }
-        for(int i = 75; i < renderingFor.getHeight(); i+= 75){
-            g2d.drawLine(0, i, renderingFor.getWidth(), i);
-        }
+    }
+
+    private void drawHex(Graphics g, int posX, int posY, int x, int y, float r) {
+        Graphics2D g2d = (Graphics2D) g;
+        String text = String.format("%s : %s", coord(posX), coord(posY));
+        int w = metrics.stringWidth(text);
+        int h = metrics.getHeight();
+
+        Hexagon hex = new Hexagon(x, y, r);
+        hex.draw(g2d, x, y, 1, 0xFFDD88, false);
+
+        g.setColor(new Color(0xFFFFFF));
+        g.drawString(text, x - w/2, y + h/2);
+    }
+
+    private String coord(int value) {
+        return (value > 0 ? "+" : "") + Integer.toString(value);
     }
 
     public void paintNextBubble(Graphics2D g2d){
