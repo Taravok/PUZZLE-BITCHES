@@ -3,7 +3,6 @@
  */
 
 package puzzle_bitches_logic;
-import puzzle_bitches_interfaces.*;
 import java.util.ArrayList;
 
 public class BubbleField {
@@ -14,9 +13,9 @@ public class BubbleField {
     public final static int MAXFIELDY = 600;
 
     private final int angleStep = 2;
-    private ArrayList<RegularBubble> regularBubbles;
-    private RegularBubble activeRegularBubble;
-    private RegularBubble nextRegularBubble;
+    private ArrayList<Bubble> regularBubbles;
+    private Bubble activeRegularBubble;
+    private Bubble nextRegularBubble;
     private boolean game;
     private boolean collision;
     private int launcherAngle;
@@ -25,10 +24,10 @@ public class BubbleField {
     public BubbleField(){
         this.regularBubbles = new ArrayList<>();
         this.launcherAngle = 270;
-        this.nextRegularBubble = new RegularBubble();
+        this.nextRegularBubble = new Bubble();
     }
 
-    public ArrayList<RegularBubble> getRegularBubbles(){
+    public ArrayList<Bubble> getRegularBubbles(){
         return regularBubbles;
     }
 
@@ -53,17 +52,17 @@ public class BubbleField {
                 collision = checkCollisions(activeRegularBubble) || checkCollisionOtherBubbles();
                 activeRegularBubble.moveBubble();
                 try {
-                    Thread.sleep(250 / 120);
+                    Thread.sleep(1);
                 } catch (InterruptedException ex){
                     ex.printStackTrace();
                 }
             }
     }
 
-    private synchronized boolean checkCollisions(RegularBubble regularBubble){
-        float collisionBorderMinX = BubbleField.MINFIELDX + RegularBubble.BUBBLERADIUS;
-        float collisionBorderMaxX = BubbleField.MAXFIELDX - RegularBubble.BUBBLERADIUS;
-        float collisionBorderMinY = BubbleField.MINFIELDY + RegularBubble.BUBBLERADIUS;
+    private synchronized boolean checkCollisions(Bubble regularBubble){
+        float collisionBorderMinX = BubbleField.MINFIELDX + Bubble.BUBBLERADIUS;
+        float collisionBorderMaxX = BubbleField.MAXFIELDX - Bubble.BUBBLERADIUS;
+        float collisionBorderMinY = BubbleField.MINFIELDY + Bubble.BUBBLERADIUS;
         float posBubbleX = regularBubble.getPosX();
         float posBubbleY = regularBubble.getPosY();
         if(posBubbleX < collisionBorderMinX || collisionBorderMaxX < posBubbleX){
@@ -87,7 +86,7 @@ public class BubbleField {
                         ((currentBubbleX - prevousBubbleX) * (currentBubbleX - prevousBubbleX))
                                 + ((currentBubbleY - prevousBubbleY) * (currentBubbleY - prevousBubbleY))
                 );
-                if (distanceBetweenBubbles < ((RegularBubble.BUBBLERADIUS * 2) + 5)) {
+                if (distanceBetweenBubbles < ((Bubble.BUBBLERADIUS * 2) + 5)) {
                     return true;
                 }
             }
@@ -100,7 +99,7 @@ public class BubbleField {
         nextRegularBubble.setBubbleTrajectoryAngle(launcherAngle);
         activeRegularBubble = nextRegularBubble;
         regularBubbles.add(nextRegularBubble);
-        nextRegularBubble = new RegularBubble();
+        nextRegularBubble = new Bubble();
     }
 
     public void moveLauncherLeft(){
@@ -119,10 +118,10 @@ public class BubbleField {
     public void clearField(){
         regularBubbles = new ArrayList<>();
         activeRegularBubble = null;
-        nextRegularBubble = new RegularBubble();
+        nextRegularBubble = new Bubble();
     }
 
-    public RegularBubble getNextRegularBubble() {
+    public Bubble getNextRegularBubble() {
         return nextRegularBubble;
     }
 }

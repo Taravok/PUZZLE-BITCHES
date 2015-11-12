@@ -1,19 +1,18 @@
 package puzzle_bitches_logic;
 
-import java.awt.*;
 import java.util.Random;
-import puzzle_bitches_interfaces.Bubble;
+import puzzle_bitches_interfaces.MovingObject;
 
 /**
  * Created by Brenainn on 09/11/2015.
  */
 
-public class RegularBubble extends Bubble {
+public class Bubble extends MovingObject {
 
     int bubbleColorValueX;
     int bubbleColorValueY;
 
-    public RegularBubble(){
+    public Bubble(){
         super();
         setPosX(BubbleField.MAXFIELDX / 2);
         setPosY(BubbleField.MAXFIELDY - 50);

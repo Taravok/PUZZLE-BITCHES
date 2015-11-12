@@ -5,7 +5,7 @@ import java.awt.*;
 /**
  * Created by Brenainn on 12/11/2015.
  */
-public abstract class Bubble extends GameObject {
+public abstract class MovingObject extends GameObject {
 
     public final static float BUBBLERADIUS = 16;
     public final static int BASEBUBBLESPEED = 5;

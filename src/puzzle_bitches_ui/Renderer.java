@@ -2,7 +2,7 @@ package puzzle_bitches_ui;
 
 import puzzle_bitches_logic.BubbleField;
 import puzzle_bitches_logic.Launcher;
-import puzzle_bitches_logic.RegularBubble;
+import puzzle_bitches_logic.Bubble;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -38,17 +38,27 @@ class Renderer {
         }
     }
 
+    public void paintGrid(Graphics2D g2d){
+        for(int i = 25; i < renderingFor.getWidth(); i+= 25){
+            g2d.setColor(Color.RED);
+            g2d.drawLine(i, 0, i, renderingFor.getHeight());
+        }
+        for(int i = 25; i < renderingFor.getHeight(); i+= 25){
+            g2d.drawLine(0, i, renderingFor.getWidth(), i);
+        }
+    }
+
     public void paintNextBubble(Graphics2D g2d){
-        RegularBubble nextRegularBubble = bubbleField.getNextRegularBubble();
+        Bubble nextRegularBubble = bubbleField.getNextRegularBubble();
         float bubblePosX = nextRegularBubble.getPosX();
         float bubblePosY = nextRegularBubble.getPosY();
         g2d.setColor(nextRegularBubble.getBubbleColor());
-        g2d.fillOval(50, BubbleField.MAXFIELDY - 60, (int)(2 * RegularBubble.BUBBLERADIUS), (int)(2 * RegularBubble.BUBBLERADIUS));
+        g2d.fillOval(50, BubbleField.MAXFIELDY - 60, (int)(2 * Bubble.BUBBLERADIUS), (int)(2 * Bubble.BUBBLERADIUS));
     }
 
     public void paintBubbles(Graphics2D g2d){
-        ArrayList<RegularBubble> regularBubbles = (ArrayList<RegularBubble>)bubbleField.getRegularBubbles().clone();
-        for(RegularBubble regularBubble : regularBubbles){
+        ArrayList<Bubble> regularBubbles = (ArrayList<Bubble>)bubbleField.getRegularBubbles().clone();
+        for(Bubble regularBubble : regularBubbles){
             int bubblePosX = regularBubble.getBubbleRenderPosX();
             int bubblePosY = regularBubble.getBubbleRenderPosY();
             BufferedImage bubbleSprite = spriteSheet.getSubimage(regularBubble.getBubbleColorValueX() * 32, regularBubble.getBubbleColorValueY() * 32, 32, 32);
