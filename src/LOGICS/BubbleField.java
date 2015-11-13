@@ -18,6 +18,7 @@ public class BubbleField {
     private boolean collision;
     private int launcherAngle;
     private Point[][] hexGrid;
+    private boolean[][] filledHexes;
     private boolean logged;
 
     Thread gameThread;
@@ -37,10 +38,23 @@ public class BubbleField {
         return launcherAngle;
     }
 
-    public void setHexGrid(Point[][] hexGrid1){
-        if(hexGrid == null){
+    public void setHexGrid(Point[][] hexGrid){
+        if(this.hexGrid == null) {
             System.out.println("setHexGrid called and assigned");
-            this.hexGrid = hexGrid1;
+            this.hexGrid = hexGrid;
+            initialiseFilledHexes();
+        }
+    }
+
+    private void initialiseFilledHexes(){
+        this.filledHexes = new boolean[hexGrid.length][];
+        for(int y = 0; y < hexGrid.length; y++){
+            filledHexes[y] = new boolean[hexGrid[y].length];
+        }
+        for (boolean[] filledHexRow : filledHexes ) {
+            for (boolean filledHex : filledHexRow ) {
+                filledHex = false;
+            }
         }
     }
 
@@ -74,25 +88,46 @@ public class BubbleField {
     private void snapToGrid(){
         float activeX = activeRegularBubble.getPosX();
         float activeY = activeRegularBubble.getPosY();
-        float smallestX = 99999;
-        float smallestY = 99999;
+        float smallestXDifference = 99999;
+        float smallestYDifference = 99999;
+        int definitiveX = 0;
+        int definitiveY = 0;
         Point closestPoint = new Point(0, 0);
         for (int y = 0; hexGrid != null && y < hexGrid.length; y ++) {
-            for (int x = 0; hexGrid[y] != null && x < hexGrid[y].length; x++) {
-                float gridPosX = hexGrid[y][x].x;
-                float gridPosY = hexGrid[y][x].y;
-                if(Math.abs(activeX - gridPosX) < smallestX && Math.abs(activeY - gridPosY) <= smallestY){
-                    smallestX = activeX - hexGrid[y][x].x;
-                    smallestY = activeY - hexGrid[y][x].y;
-                    closestPoint = hexGrid[y][x];
+            for (int x = 0; x < hexGrid[y].length; x++) {
+                float compareX = Math.abs(activeX - hexGrid[y][x].x);
+                float compareY = Math.abs(activeY - hexGrid[y][x].y);
+                float tempX = smallestXDifference;
+                float tempY = smallestYDifference;
+                smallestXDifference = (compareX < smallestXDifference) ? compareX : smallestXDifference;
+                smallestYDifference = (compareY < smallestYDifference) ? compareY : smallestYDifference;
+                System.out.println("HexGrid cell x: " + x + " y: " + y);
+                System.out.println("Difference between hexGrid point and bubbleX: " + compareX);
+                System.out.println("Difference between hexGrid point and bubbleY: " + compareY);
+                System.out.println("Smallest X according to current detection: " + smallestXDifference);
+                System.out.println("Smallest Y according to current detection: " + smallestYDifference);
+                if(smallestXDifference == compareX && smallestYDifference == compareY){
+                    if(!filledHexes[y][x]){
+                        closestPoint = hexGrid[y][x];
+                        definitiveX = x;
+                        definitiveY = y;
+                        System.out.println(closestPoint);
+                    } else{
+                        smallestXDifference = tempX;
+                        smallestYDifference = tempY;
+                    }
+
                 }
+                System.out.println();
             }
         }
-        activeRegularBubble.setPosY(closestPoint.y);
+        filledHexes[definitiveY][definitiveX] = true;
         activeRegularBubble.setPosX(closestPoint.x);
+        activeRegularBubble.setPosY(closestPoint.y);
+        drawArray(filledHexes);
     }
 
-    private void drawArray(Point[][] hexGrid){
+    private void drawArray(boolean[][] hexGrid){
         if(!logged){
             for(int y = 0; y < hexGrid.length; y++){
                 for(int x = 0; x < hexGrid[y].length; x++){
@@ -161,6 +196,7 @@ public class BubbleField {
     }
 
     public void clearField(){
+        initialiseFilledHexes();
         regularBubbles = new ArrayList<>();
         activeRegularBubble = null;
         nextRegularBubble = new Bubble();
