@@ -51,11 +51,7 @@ public class BubbleField {
         for(int y = 0; y < hexGrid.length; y++){
             filledHexes[y] = new boolean[hexGrid[y].length];
         }
-        for (boolean[] filledHexRow : filledHexes ) {
-            for (boolean filledHex : filledHexRow ) {
-                filledHex = false;
-            }
-        }
+        drawArray(filledHexes);
     }
 
     public void gameStart(){
