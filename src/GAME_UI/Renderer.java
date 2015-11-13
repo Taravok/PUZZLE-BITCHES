@@ -55,15 +55,13 @@ class Renderer {
         int half = size / 2;
 
         for (int row = 0; row < size; row++) {
-            int cols = size - java.lang.Math.abs(row - half);
+            int cols = (row % 2 == 0) ? 8 : 9;
 
             for (int col = 0; col < cols; col++) {
-                int xLbl = (row < half) ? col - row : col - half;
-                int yLbl = row - half;
                 int x = (int) (origin.x + xOff * (col * 2 + 1 - cols));
                 int y = (int) (origin.y + yOff * (row - half) * 3);
 
-                drawHex(g, xLbl, yLbl, x, y, radius);
+                drawHex(g, row, col, x, y, radius);
             }
         }
     }
