@@ -16,11 +16,13 @@ class Renderer {
     private BufferedImage shooterImage;
     private BufferedImage spriteSheet;
     private Font font = new Font("Arial", Font.BOLD, 14);
+    private boolean logged;
     FontMetrics metrics;
 
     public Renderer(BubbleField bubbleField, Canvas renderingFor){
         this.bubbleField = bubbleField;
         this.renderingFor = renderingFor;
+        this.logged = false;
         loadImages();
     }
 
@@ -39,7 +41,7 @@ class Renderer {
 
     public void paintHexGrid(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        Point origin = new Point (300, 445);
+        Point origin = new Point (304, 448);
 
         g2d.setStroke(new BasicStroke(4.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
         g2d.setFont(font);
@@ -53,18 +55,21 @@ class Renderer {
         double xOff = Math.cos(ang30) * radius;
         double yOff = Math.sin(ang30) * radius;
         int half = size / 2;
-
+        Point[][] hexGrid = new Point[size][];
         for (int row = 0; row < size; row++) {
-            int cols = (row % 2 == 0) ? 8 : 9;
-
+            int cols = (row % 2 == 0) ? 9 : 8;
+            hexGrid[row] = new Point[cols];
             for (int col = 0; col < cols; col++) {
                 int x = (int) (origin.x + xOff * (col * 2 + 1 - cols));
                 int y = (int) (origin.y + yOff * (row - half) * 3);
-
+                hexGrid[row][col] = new Point(x, y);
                 drawHex(g, row, col, x, y, radius);
             }
         }
+        bubbleField.setHexGrid(hexGrid);
     }
+
+
 
     private void drawHex(Graphics g, int posX, int posY, int x, int y, float r) {
         Graphics2D g2d = (Graphics2D) g;
